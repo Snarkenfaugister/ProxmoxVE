@@ -45,16 +45,22 @@ function update_script() {
         msg_ok "Stopped $APP"
 
         msg_info "Updating $APP to v${RELEASE}"
-        cd /opt/pocket-id
-        git fetch --tags
-        git checkout $(git describe --tags `git rev-list --tags --max-count=1`)
+        cp -r /opt/pocket-id/backend/data /opt/data
+	cp /opt/pocket-id/backend/.env /opt/backend.env
+	cp /opt/pocket-id/frontend/.env /opt/frontend.env
+	rm -r /opt/pocket-id
+	wget -q "https://github.com/stonith404/pocket-id/archive/refs/tags/${RELEASE}.zip"
+	unzip -q ${RELEASE}.zip
+	mv pocket-id-${RELEASE} /opt/pocket-id
+	mv /opt/data /opt/pocket-id/backend/data
+	mv /opt/backend.env /opt/pocket-id/backend/.env 
+	mv /opt/frontend.env /opt/pocket-id/frontend/.env 
+
         cd /opt/pocket-id/backend/cmd
         go build -o ../pocket-id-backend
         cd ../../frontend
         npm install
         npm run build
-        cd ..
-        cp reverse-proxy/Caddyfile /etc/caddy/Caddyfile
         msg_ok "Updated $APP to ${RELEASE}"
 
         msg_info "Starting $APP"
