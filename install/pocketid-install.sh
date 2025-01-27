@@ -46,9 +46,10 @@ msg_ok "Installed Golang"
 
 read -r -p "What public URL do you want to use (e.g. pocketid.mydomain.com)? " public_url
 msg_info "Setup Pocket ID"
-RELEASE=$(curl -s https://api.github.com/repos/stonith404/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
-wget -q "https://github.com/stonith404/pocket-id/archive/refs/tags/${RELEASE}.zip"
-unzip -q ${RELEASE}.zip
+cd /opt
+RELEASE=$(curl -s https://api.github.com/repos/stonith404/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 3, length($2)-4) }')
+wget -q "https://github.com/stonith404/pocket-id/archive/refs/tags/v${RELEASE}.zip"
+unzip -q v${RELEASE}.zip
 mv pocket-id-${RELEASE}/ /opt/pocket-id
 
 cd /opt/pocket-id/backend
@@ -123,6 +124,7 @@ motd_ssh
 customize
 
 msg_info "Cleaning up"
+rm -f /opt/v${RELEASE}.zip
 $STD apt-get -y autoremove
 $STD apt-get -y autoclean
 msg_ok "Cleaned"
