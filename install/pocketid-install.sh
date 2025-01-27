@@ -45,7 +45,7 @@ ln -s /usr/local/go/bin/go /usr/bin/go
 set -o pipefail
 msg_ok "Installed Golang"
 
-read -r -p "What public URL do you want to use? (e.g. pocketid.mydomain.com" public_url
+read -r -p "What public URL do you want to use (e.g. pocketid.mydomain.com)? " public_url
 msg_info "Setup Pocket ID"
 RELEASE=$(curl -s https://api.github.com/repos/stonith404/pocket-id/releases/latest | grep "tag_name" | awk '{print substr($2, 2, length($2)-3) }')
 $STD git clone https://github.com/stonith404/pocket-id /opt/pocket-id
